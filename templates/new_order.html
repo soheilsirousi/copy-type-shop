@@ -56,6 +56,19 @@
       {% endfor %}
   </select>
 
+    <label for="id_attachment">فایل ضمیمه (اصل متن برای تایپ یا ترجمه)</label>
+  <div class="file-field" id="file-field">
+    <input type="file" name="attachment" id="id_attachment"
+           accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required>
+    <div class="file-field-box">
+      <span class="file-field-icon">📎</span>
+      <span class="file-field-text" id="file-field-text">فایلی انتخاب نشده — برای انتخاب کلیک کنید</span>
+    </div>
+  </div>
+  <div class="field-error" id="attachment-hint" style="margin-top:10px; margin-bottom:18px; display:block; color:var(--ink-soft);">
+    فرمت‌های مجاز: PDF، Word، JPG، PNG — پیوست فایل الزامی است.
+  </div>
+
   <button type="button" class="btn btn-primary btn-block" id="calc-btn" data-estimate-url="{% url 'estimate-price' %}">محاسبه هزینه و زمان تخمینی</button>
 
   <div class="estimate-box" id="estimate-slot" hidden>

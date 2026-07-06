@@ -15,11 +15,14 @@
 <div class="detail-card">
   <div class="stamp
     {% if order.order_status == 'PENDING' %}stamp-pending
-    {% elif order.order_status == 'PAID' %}stamp-progress
-    {% elif order.order_status == 'COMPLETE' %}stamp-ready
+    {% elif order.order_status == 'PROGRESS' %}stamp-progress
+    {% elif order.order_status == 'READY' %}stamp-ready
     {% else %}stamp-done{% endif %}"
     style="position:static; transform:rotate(-8deg); display:inline-flex; margin-bottom:14px;">
-    {{ order.get_order_status_display }}
+      {% if order.order_status == 'DELIVERED' %}تحویل شده
+      {% elif order.order_status == 'PROGRESS' %}درحال انجام
+      {% elif order.order_status == 'READY' %}آماده تحویل
+      {% else %}درانتظار تایید{% endif %}
   </div>
 
   <div class="page-title" style="font-size:20px;">سفارش #{{ order.id }} — {{ order.get_order_type_display }}</div>
@@ -33,17 +36,17 @@
   </div>
 
   <div class="pay-box">
-    <div class="row"><span>هزینه کل سفارش</span><span class="mono">{{ order.estimated_price }}</span></div>
-    <div class="row"><span>پرداخت‌شده</span><span class="mono">{{ order.paid_amount }}</span></div>
-    <div class="row total"><span>باقی‌مانده</span><span class="mono">{{ order.remain_amount }}</span></div>
+    <div class="row"><span>هزینه کل سفارش</span><span class="mono">{{ order.estimated_price }} تومان</span></div>
+    <div class="row"><span>پرداخت‌شده</span><span class="mono">{{ order.paid_amount }} تومان</span></div>
+    <div class="row total"><span>باقی‌مانده</span><span class="mono">{{ order.remain_amount }} تومان</span></div>
   </div>
 
-  {% if order.order_status == 'PENDING' %}
+  {% if order.order_status == 'READY' %}
     <form method="post" style="margin-top:18px;">
         {% csrf_token %}
       <button type="submit" class="btn btn-gold btn-block">پرداخت باقی‌مانده و دانلود فایل</button>
     </form>
-  {% elif order.order_status == 'COMPLETE' %}
+  {% elif order.order_status == 'DELIVERED' %}
     <a href="{% url 'download-file' order.id %}" class="btn btn-primary btn-block" style="margin-top:18px;">دانلود فایل نهایی</a>
   {% else %}
     <div style="margin-top:18px; color:var(--ink-soft); font-size:13.5px;">

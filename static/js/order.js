@@ -18,6 +18,22 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // نمایش اسم فایل انتخاب‌شده برای پیوست سفارش
+  const fileInput = document.getElementById('id_attachment');
+  const fileField = document.getElementById('file-field');
+  const fileFieldText = document.getElementById('file-field-text');
+  if (fileInput) {
+    fileInput.addEventListener('change', function () {
+      if (fileInput.files.length > 0) {
+        fileFieldText.textContent = fileInput.files[0].name;
+        fileField.classList.add('has-file');
+      } else {
+        fileFieldText.textContent = 'فایلی انتخاب نشده — برای انتخاب کلیک کنید';
+        fileField.classList.remove('has-file');
+      }
+    });
+  }
+
   calcButton.addEventListener('click', function () {
     const pages = document.getElementById('id_pages').value;
     const language = document.getElementById('id_language').value;

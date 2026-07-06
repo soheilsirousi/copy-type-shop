@@ -12,10 +12,13 @@
   <a href="{% url 'order-detail' order.id %}" class="ticket" style="text-decoration:none; color:inherit; display:block;">
     <div class="stamp
       {% if order.order_status == 'PENDING' %}stamp-pending
-      {% elif order.order_status == 'PAID' %}stamp-progress
-      {% elif order.order_status == 'COMPLETE' %}stamp-ready
+      {% elif order.order_status == 'PROGRESS' %}stamp-progress
+      {% elif order.order_status == 'READY' %}stamp-ready
       {% else %}stamp-done{% endif %}">
-      {{ order.get_order_status_display }}
+      {% if order.order_status == 'DELIVERED' %}تحویل شده
+      {% elif order.order_status == 'PROGRESS' %}درحال انجام
+      {% elif order.order_status == 'READY' %}آماده تحویل
+      {% else %}درانتظار تایید{% endif %}
     </div>
     <div class="ticket-top">
       <div>

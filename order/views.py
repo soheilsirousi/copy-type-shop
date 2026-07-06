@@ -1,9 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
 
+from file.models import File
 from order.models import Language, InputFormat, Order
 
 
@@ -97,7 +98,7 @@ class OrderDetailView(LoginRequiredMixin, View):
 
         order = order.first()
 
-        order.order_status = 'COMPLETE'
+        order.order_status = 'DELIVERED'
         order.is_complete = True
         order.completed_at = timezone.now()
         order.save()
@@ -108,5 +109,19 @@ class OrderDetailView(LoginRequiredMixin, View):
 class OrderDownloadView(LoginRequiredMixin, View):
     login_url = '/user/login/'
 
-    def get(self, request, *args, **kwargs):
-        pass
+    def get(self, request, pk, *args, **kwargs):
+        order = Order.objects.filter(pk=pk, user=request.user)
+
+        if not order.exists():
+            response = {"error": "سفارش یافت نشد."}
+            return render(request, template_name='order_detail.html', context=response)
+
+        order = order.first()
+        file = order.files.filter(file_type=File.OUTPUT)
+        if not file.exists():
+            response = {"error": "فایل یافت نشد."}
+            return render(request, template_name='order_detail.html', context=response)
+
+        file = file.first()
+
+        return HttpResponseRedirect(file.file.url)
