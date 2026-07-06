@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ثبت سفارش جدید{% endblock %}
+{% block nav_new_order %}active{% endblock %}
+
+{% block content %}
+<div class="page-title">ثبت سفارش جدید</div>
+<div class="page-sub">نوع سفارش و مشخصات کار را وارد کنید تا هزینه و زمان تخمینی محاسبه شود.</div>
+
+{% if error %}
+
+  <div class="alert alert-error">{{ error }}</div>
+
+
+{% endif %}
+
+<form method="post" action="{% url 'new-order' %}" id="order-form">
+{% csrf_token %}
+<div class="form-card">
+
+  <label>نوع سفارش</label>
+  <div class="type-select">
+    <label class="type-opt" data-type="typing">
+      <input type="radio" name="order_type" value="typing" checked>
+      <div class="t-icon">⌨</div>
+      <div class="t-text">
+        <div class="t-label">تایپ صفحه</div>
+        <div class="t-desc">تایپ متن از روی نسخه‌ی چاپی، دست‌نویس یا PDF</div>
+      </div>
+    </label>
+    <label class="type-opt" data-type="translation">
+      <input type="radio" name="order_type" value="translation">
+      <div class="t-icon">🌐</div>
+      <div class="t-text">
+        <div class="t-label">ترجمه مقاله</div>
+        <div class="t-desc">ترجمه‌ی تخصصی متن بین دو زبان</div>
+      </div>
+    </label>
+  </div>
+
+  <label for="id_pages">تعداد صفحات</label>
+  <input type="number" name="pages" id="id_pages" min="1" placeholder="مثلاً: ۱۲" required>
+
+  <label for="id_language">زبان مدنظر</label>
+  <select name="language" id="id_language">
+      {% for language in languages %}
+    <option value="{{ language.id }}">{{ language.name }}</option>
+      {% endfor %}
+  </select>
+
+  <label for="id_format">نوع متن</label>
+  <select name="format" id="id_format">
+      {% for input_format in input_formats %}
+    <option value="{{ input_format.id }}">{{ input_format.name }}</option>
+      {% endfor %}
+  </select>
+
+  <button type="button" class="btn btn-primary btn-block" id="calc-btn" data-estimate-url="{% url 'estimate-price' %}">محاسبه هزینه و زمان تخمینی</button>
+
+  <div class="estimate-box" id="estimate-slot" hidden>
+    <div class="estimate-row"><span>هزینه کل</span><span class="val mono" id="est-price">—</span></div>
+    <div class="estimate-row"><span>زمان تخمینی انجام</span><span class="val mono" id="est-days">—</span></div>
+    <div class="estimate-row"><span>پیش‌پرداخت لازم برای ثبت نهایی (۵۰٪)</span><span class="val mono" id="est-half">—</span></div>
+    <div class="estimate-actions">
+      <button type="submit" class="btn btn-gold" id="confirm-order-btn">پرداخت نیمه و ثبت نهایی سفارش</button>
+      <button type="button" class="btn btn-ghost" id="recalc-btn">ویرایش مشخصات</button>
+    </div>
+  </div>
+
+</div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/order.js' %}"></script>
+{% endblock %}

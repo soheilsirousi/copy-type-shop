@@ -1,0 +1,46 @@
+{% load static %}
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}دفتر سفارش‌ها{% endblock %} | تایپ و تکثیر</title>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div>
+      <div class="brand">دفتر سفارش‌ها</div>
+      <div class="brand-sub">TYPE &amp; COPY SHOP</div>
+    </div>
+    <a href="{% url 'profile' %}" class="nav-item {% block nav_profile %}{% endblock %}">سفارش‌های من</a>
+    <a href="{% url 'new-order' %}" class="nav-item {% block nav_new_order %}{% endblock %}">ثبت سفارش جدید</a>
+    <div class="sidebar-foot">
+      <div class="user-chip">کاربر: {{ request.user.first_name }} {{ request.user.last_name }}</div>
+      <form method="get" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">خروج از حساب</button>
+      </form>
+    </div>
+  </aside>
+  <main class="main">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="{% static 'js/main.js' %}"></script>
+{% if messages %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    {% for message in messages %}
+      showToast("{{ message|escapejs }}");
+    {% endfor %}
+  });
+</script>
+{% endif %}
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

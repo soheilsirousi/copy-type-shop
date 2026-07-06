@@ -1,0 +1,32 @@
+{% load static %}
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}ورود{% endblock %} | دفتر سفارش‌ها</title>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">دفتر سفارش‌ها</div>
+    <div class="auth-logo-sub">TYPE &amp; COPY SHOP</div>
+    {% block auth_content %}{% endblock %}
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="{% static 'js/main.js' %}"></script>
+{% if messages %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    {% for message in messages %}
+      showToast("{{ message|escapejs }}");
+    {% endfor %}
+  });
+</script>
+{% endif %}
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

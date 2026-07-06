@@ -1,0 +1,77 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="false" level="WARNING" enabled_by_default="false">
+      <option name="ignoredPackages">
+        <list>
+          <option value="amqp" />
+          <option value="arabic-reshaper" />
+          <option value="asgiref" />
+          <option value="attrs" />
+          <option value="billiard" />
+          <option value="celery" />
+          <option value="certifi" />
+          <option value="chardet" />
+          <option value="charset-normalizer" />
+          <option value="click" />
+          <option value="click-didyoumean" />
+          <option value="click-plugins" />
+          <option value="click-repl" />
+          <option value="colorama" />
+          <option value="coreapi" />
+          <option value="coreschema" />
+          <option value="dj-database-url" />
+          <option value="Django" />
+          <option value="django-cors-headers" />
+          <option value="django-filter" />
+          <option value="django-redis" />
+          <option value="django-rest-swagger" />
+          <option value="djangorestframework" />
+          <option value="djangorestframework_simplejwt" />
+          <option value="dotenv" />
+          <option value="drf-yasg" />
+          <option value="gunicorn" />
+          <option value="idna" />
+          <option value="inflection" />
+          <option value="isodate" />
+          <option value="itypes" />
+          <option value="jalali_core" />
+          <option value="jdatetime" />
+          <option value="Jinja2" />
+          <option value="kombu" />
+          <option value="lxml" />
+          <option value="Markdown" />
+          <option value="MarkupSafe" />
+          <option value="mymelipayamak" />
+          <option value="openapi-codec" />
+          <option value="packaging" />
+          <option value="pillow" />
+          <option value="platformdirs" />
+          <option value="prompt_toolkit" />
+          <option value="psycopg2-binary" />
+          <option value="PyJWT" />
+          <option value="python-bidi" />
+          <option value="python-dateutil" />
+          <option value="python-dotenv" />
+          <option value="pytz" />
+          <option value="PyYAML" />
+          <option value="redis" />
+          <option value="reportlab" />
+          <option value="requests" />
+          <option value="requests-file" />
+          <option value="requests-toolbelt" />
+          <option value="simplejson" />
+          <option value="six" />
+          <option value="sqlparse" />
+          <option value="typing_extensions" />
+          <option value="tzdata" />
+          <option value="uritemplate" />
+          <option value="urllib3" />
+          <option value="vine" />
+          <option value="wcwidth" />
+          <option value="zeep" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

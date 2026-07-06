@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}سفارش‌های من{% endblock %}
+{% block nav_profile %}active{% endblock %}
+
+{% block content %}
+<div class="page-title">سفارش‌های من</div>
+<div class="page-sub">فهرست سفارش‌های تایپ و ترجمه‌ی ثبت‌شده — روی هر سفارش بزنید تا جزئیاتش را ببینید.</div>
+
+{% if orders %}
+  {% for order in orders %}
+  <a href="{% url 'order-detail' order.id %}" class="ticket" style="text-decoration:none; color:inherit; display:block;">
+    <div class="stamp
+      {% if order.order_status == 'PENDING' %}stamp-pending
+      {% elif order.order_status == 'PAID' %}stamp-progress
+      {% elif order.order_status == 'COMPLETE' %}stamp-ready
+      {% else %}stamp-done{% endif %}">
+      {{ order.get_order_status_display }}
+    </div>
+    <div class="ticket-top">
+      <div>
+        <div class="ticket-id mono">سفارش #{{ order.id }}</div>
+        <div class="ticket-title">{{ order.get_order_type_display }} — {{ order.page_count }} صفحه</div>
+        <div class="ticket-meta">
+          زبان: {{ order.language }} &nbsp;·&nbsp; نوع متن: {{ order.input_format }}<br>
+          زمان تخمینی: {{ order.estimated_days }} روز کاری
+        </div>
+      </div>
+      <div class="ticket-price mono">{{ order.estimated_price }}  تومان</div>
+    </div>
+  </a>
+  {% endfor %}
+{% else %}
+  <div class="empty-state">
+    هنوز سفارشی ثبت نکرده‌اید.
+    <div><a href="{% url 'new-order' %}" class="btn btn-gold">ثبت سفارش جدید</a></div>
+  </div>
+{% endif %}
+{% endblock %}

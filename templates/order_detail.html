@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}سفارش #{{ order.id }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'profile' %}" class="btn btn-ghost" style="margin-bottom:20px;">‹ بازگشت به سفارش‌ها</a>
+
+{% if error %}
+
+  <div class="alert alert-error">{{ error }}</div>
+
+
+{% endif %}
+
+<div class="detail-card">
+  <div class="stamp
+    {% if order.order_status == 'PENDING' %}stamp-pending
+    {% elif order.order_status == 'PAID' %}stamp-progress
+    {% elif order.order_status == 'COMPLETE' %}stamp-ready
+    {% else %}stamp-done{% endif %}"
+    style="position:static; transform:rotate(-8deg); display:inline-flex; margin-bottom:14px;">
+    {{ order.get_order_status_display }}
+  </div>
+
+  <div class="page-title" style="font-size:20px;">سفارش #{{ order.id }} — {{ order.get_order_type_display }}</div>
+  <div class="page-sub" style="margin-bottom:0;">ثبت‌شده توسط {{ request.user.first_name }} {{ request.user.last_name }}</div>
+
+  <div class="detail-grid">
+    <div class="detail-field"><div class="k">تعداد صفحات</div><div class="v">{{ order.page_count }}</div></div>
+    <div class="detail-field"><div class="k">زبان</div><div class="v">{{ order.language }}</div></div>
+    <div class="detail-field"><div class="k">نوع متن</div><div class="v">{{ order.input_format }}</div></div>
+    <div class="detail-field"><div class="k">زمان تخمینی</div><div class="v">{{ order.estimated_days }} روز کاری</div></div>
+  </div>
+
+  <div class="pay-box">
+    <div class="row"><span>هزینه کل سفارش</span><span class="mono">{{ order.estimated_price }}</span></div>
+    <div class="row"><span>پرداخت‌شده</span><span class="mono">{{ order.paid_amount }}</span></div>
+    <div class="row total"><span>باقی‌مانده</span><span class="mono">{{ order.remain_amount }}</span></div>
+  </div>
+
+  {% if order.order_status == 'PENDING' %}
+    <form method="post" style="margin-top:18px;">
+        {% csrf_token %}
+      <button type="submit" class="btn btn-gold btn-block">پرداخت باقی‌مانده و دانلود فایل</button>
+    </form>
+  {% elif order.order_status == 'COMPLETE' %}
+    <a href="{% url 'download-file' order.id %}" class="btn btn-primary btn-block" style="margin-top:18px;">دانلود فایل نهایی</a>
+  {% else %}
+    <div style="margin-top:18px; color:var(--ink-soft); font-size:13.5px;">
+      سفارش در حال انجام است؛ پس از آماده شدن فایل، امکان پرداخت باقی‌مانده و دانلود فعال می‌شود.
+    </div>
+  {% endif %}
+
+<!--  {% if order.status == 'in_progress' %}-->
+<!--  <div class="demo-hint">-->
+<!--    برای دموی جریان کار: در حالت واقعی این مرحله وقتی مغازه فایل نهایی را آپلود می‌کند طی می‌شود.-->
+<!--    <div style="margin-top:8px;">-->
+<!--      <form method="post" action="{% url 'simulate_ready' order.id %}">-->
+<!--        {% csrf_token %}-->
+<!--        <button type="submit" class="btn btn-ghost">شبیه‌سازی: مغازه فایل را آماده کرد</button>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  {% endif %}-->
+</div>
+{% endblock %}
