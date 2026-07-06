@@ -15,7 +15,7 @@
 
 {% endif %}
 
-<form method="post" action="{% url 'new-order' %}" id="order-form">
+<form method="post" action="{% url 'new-order' %}" id="order-form" enctype="multipart/form-data">
 {% csrf_token %}
 <div class="form-card">
 

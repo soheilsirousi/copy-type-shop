@@ -72,7 +72,7 @@ body{
 .btn-primary:hover{ background:var(--navy-soft); }
 .btn-gold{ background:var(--gold); color:var(--navy); }
 .btn-gold:hover{ filter:brightness(1.08); }
-.btn-ghost{ background:transparent; color:var(--navy); border:1.5px solid var(--border); }
+.btn-ghost{ background:transparent; color:var(--gold); border:1.5px solid var(--border); }
 .btn-ghost:hover{ background:rgba(38,58,78,.06); }
 .btn-block{ width:100%; justify-content:center; }
 .btn:disabled{ opacity:.45; cursor:not-allowed; }

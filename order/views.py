@@ -24,10 +24,29 @@ class NewOrderView(LoginRequiredMixin, View):
         return render(request, template_name=self.template_name, context=data)
 
     def post(self, request, *args, **kwargs):
+
+        print('POST keys:', list(request.POST.keys()))
+        print('FILES keys:', list(request.FILES.keys()))
+        print('Content-Type:', request.content_type)
         order_type_code = request.POST.get('order_type', None)
         pages = request.POST.get('pages', None)
         language_code = request.POST.get('language', None)
         format_code = request.POST.get('format', None)
+        attachment = request.FILES.get('attachment')
+
+        if not attachment:
+            response = {"error": "پیوست الزامی می‌باشد."}
+            return render(request, template_name=self.template_name, context=response)
+
+        allowed_extensions = ('.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png')
+        if not attachment.name.lower().endswith(allowed_extensions):
+            response = {"error": "فرمت فایل مجاز نیست. فقط PDF، Word، JPG یا PNG."}
+            return render(request, template_name=self.template_name, context=response)
+
+        max_size_mb = 15
+        if attachment.size > max_size_mb * 1024 * 1024:
+            response = {"error": f'حجم فایل نباید بیشتر از {max_size_mb} مگابایت باشد.'}
+            return render(request, template_name=self.template_name, context=response)
 
 
         if order_type_code is None or pages is None or language_code is None or format_code is None:
@@ -57,6 +76,8 @@ class NewOrderView(LoginRequiredMixin, View):
         order = Order.objects.create(user=request.user, order_type=order_type, page_count=int(pages),
                                      language=language, input_format=input_format, estimated_price=total_price,
                                      estimated_days=days, paid_amount=paid_price, remain_amount=remaining_price)
+
+        file = File.objects.create(order=order, file=attachment, file_type=File.INPUT)
 
         return redirect('order-detail', pk=order.id)
 
@@ -88,7 +109,8 @@ class OrderDetailView(LoginRequiredMixin, View):
             return render(request, template_name=self.template_name, context=response)
 
         order = order.first()
-        return render(request, template_name=self.template_name, context={'order': order})
+        file = File.objects.get(order=order, file_type=File.INPUT)
+        return render(request, template_name=self.template_name, context={'order': order, "file": file})
 
     def post(self, request, pk, *args, **kwargs):
         order = Order.objects.filter(pk=pk, user=request.user)
