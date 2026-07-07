@@ -7,12 +7,8 @@
 <div class="page-title">نوع فرمت‌های ورودی</div>
 <div class="page-sub">فرمت متن مشتری (دست‌نویس، PDF و غیره) که در محاسبه‌ی قیمت اثر می‌گذارد.</div>
 
-<form method="post" action="{% url 'admin_format_add' %}" class="inline-form">
+<form method="post" action="{% url 'format-add-admin' %}" class="inline-form">
   {% csrf_token %}
-  <div class="field">
-    <label for="add_code">کد</label>
-    <input type="text" name="code" id="add_code" placeholder="مثلاً: scanned" required>
-  </div>
   <div class="field">
     <label for="add_name">نام نمایشی</label>
     <input type="text" name="name" id="add_name" placeholder="مثلاً: اسکن‌شده" required>
@@ -27,15 +23,11 @@
 <div class="table-wrap">
   <table class="data-table">
     <thead>
-      <tr><th>کد</th><th>نام نمایشی</th><th>ضریب</th><th>عملیات</th></tr>
+      <tr><th>نام نمایشی</th><th>ضریب</th><th>عملیات</th></tr>
     </thead>
     <tbody>
       {% for fmt in formats %}
       <tr>
-        <td class="mono">
-          <input type="text" name="code" value="{{ fmt.code }}" form="edit-fmt-{{ fmt.id }}"
-                 style="margin:0; padding:6px 8px;" required>
-        </td>
         <td>
           <input type="text" name="name" value="{{ fmt.name }}" form="edit-fmt-{{ fmt.id }}"
                  style="margin:0; padding:6px 8px;" required>
@@ -57,10 +49,10 @@
 </div>
 
 {% for fmt in formats %}
-  <form id="edit-fmt-{{ fmt.id }}" method="post" action="{% url 'admin_format_edit' fmt.id %}" style="display:none;">
+  <form id="edit-fmt-{{ fmt.id }}" method="post" action="{% url 'format-edit-admin' fmt.id %}" style="display:none;">
     {% csrf_token %}
   </form>
-  <form id="delete-fmt-{{ fmt.id }}" method="post" action="{% url 'admin_format_delete' fmt.id %}"
+  <form id="delete-fmt-{{ fmt.id }}" method="get" action="{% url 'format-delete-admin' fmt.id %}"
         style="display:none;"
         onsubmit="return confirm('فرمت «{{ fmt.name }}» حذف شود؟');">
     {% csrf_token %}

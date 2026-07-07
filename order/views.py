@@ -6,6 +6,7 @@ from django.views import View
 
 from file.models import File
 from order.models import Language, InputFormat, Order
+from payment.models import Payment
 
 
 class IndexView(View):
@@ -78,7 +79,7 @@ class NewOrderView(LoginRequiredMixin, View):
                                      estimated_days=days, paid_amount=paid_price, remain_amount=remaining_price)
 
         file = File.objects.create(order=order, file=attachment, file_type=File.INPUT)
-
+        payment = Payment.objects.create(user=request.user, order=order, amount=paid_price, status=Payment.PAID)
         return redirect('order-detail', pk=order.id)
 
 
@@ -119,7 +120,10 @@ class OrderDetailView(LoginRequiredMixin, View):
             return render(request, template_name=self.template_name, context=response)
 
         order = order.first()
-
+        paid_price = order.remain_amount
+        order.remain_amount = 0
+        order.paid_amount = paid_price + order.paid_amount
+        payment = Payment.objects.create(user=request.user, order=order, amount=paid_price, status=Payment.PAID)
         order.order_status = 'DELIVERED'
         order.is_complete = True
         order.completed_at = timezone.now()

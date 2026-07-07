@@ -18,6 +18,11 @@
     <a href="{% url 'new-order' %}" class="nav-item {% block nav_new_order %}{% endblock %}">ثبت سفارش جدید</a>
     <div class="sidebar-foot">
       <div class="user-chip">کاربر: {{ request.user.first_name }} {{ request.user.last_name }}</div>
+        {% if request.user.is_staff %}
+      <form method="get" action="{% url 'order-list-admin' %}">
+        <button type="submit" class="logout-btn" style="margin-bottom: 10px">پنل ادمین</button>
+      </form>
+        {% endif %}
       <form method="get" action="{% url 'logout' %}">
         {% csrf_token %}
         <button type="submit" class="logout-btn">خروج از حساب</button>

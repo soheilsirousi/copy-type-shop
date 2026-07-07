@@ -20,11 +20,11 @@
       <tr>
         <td class="mono">#{{ order.id }}</td>
         <td>{{ order.user.username }}</td>
-        <td class="mono">{{ order.price_display }}</td>
-        <td class="mono">{{ order.paid_display }}</td>
-        <td class="mono">{{ order.remaining_display }}</td>
+        <td class="mono">{{ order.estimated_price }}T</td>
+        <td class="mono">{{ order.paid_amount }}T</td>
+        <td class="mono">{{ order.remain_amount }}T</td>
         <td>
-          {% if order.remaining == 0 %}
+          {% if order.remain_amount == 0 %}
             <span class="badge badge-ready">تسویه‌شده</span>
           {% else %}
             <span class="badge badge-pending">در انتظار تسویه</span>

@@ -7,6 +7,13 @@
 <div class="page-title">سفارش‌ها</div>
 <div class="page-sub">همه‌ی سفارش‌های ثبت‌شده در سامانه — برای مشاهده‌ی جزئیات و آپلود فایل، روی هر سفارش بزنید.</div>
 
+{% if error %}
+
+  <div class="alert alert-error">{{ error }}</div>
+
+
+{% endif %}
+
 <div class="table-wrap">
   <table class="data-table">
     <thead>
@@ -20,22 +27,25 @@
       <tr>
         <td class="mono">#{{ order.id }}</td>
         <td>{{ order.user.username }}</td>
-        <td>{{ order.type_label }}</td>
-        <td class="mono">{{ order.pages }}</td>
-        <td>{{ order.language_label }}</td>
-        <td class="mono">{{ order.price_display }}</td>
+        <td>{{ order.get_order_type_display }}</td>
+        <td class="mono">{{ order.page_count }}</td>
+        <td>{{ order.language }}</td>
+        <td class="mono">{{ order.estimated_price }}T</td>
         <td>
           <span class="badge
-            {% if order.status == 'pending_payment' %}badge-pending
-            {% elif order.status == 'in_progress' %}badge-progress
-            {% elif order.status == 'ready' %}badge-ready
-            {% else %}badge-done{% endif %}">
-            {{ order.status_label }}
+      {% if order.order_status == 'PENDING' %}badge-pending
+      {% elif order.order_status == 'PROGRESS' %}badge-progress
+      {% elif order.order_status == 'READY' %}badge-ready
+      {% else %}stamp-done{% endif %}">
+      {% if order.order_status == 'DELIVERED' %}تحویل شده
+      {% elif order.order_status == 'PROGRESS' %}درحال انجام
+      {% elif order.order_status == 'READY' %}آماده تحویل
+      {% else %}درانتظار تایید{% endif %}
           </span>
         </td>
         <td class="mono">{{ order.created_at|date:"Y-m-d" }}</td>
         <td class="actions">
-          <a href="{% url 'admin_order_detail' order.id %}" class="btn btn-ghost btn-sm">مشاهده</a>
+          <a href="{% url 'order-detail-admin' order.id %}" class="btn btn-ghost btn-sm">مشاهده</a>
         </td>
       </tr>
       {% empty %}

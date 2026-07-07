@@ -7,12 +7,15 @@
 <div class="page-title">زبان‌های قابل انتخاب</div>
 <div class="page-sub">این ضریب‌ها مستقیماً در محاسبه‌ی قیمت سفارش‌ها استفاده می‌شوند.</div>
 
-<form method="post" action="{% url 'admin_language_add' %}" class="inline-form">
+{% if error %}
+
+  <div class="alert alert-error">{{ error }}</div>
+
+
+{% endif %}
+
+<form method="post" action="{% url 'language-add-admin' %}" class="inline-form">
   {% csrf_token %}
-  <div class="field">
-    <label for="add_code">کد</label>
-    <input type="text" name="code" id="add_code" placeholder="مثلاً: fr" required>
-  </div>
   <div class="field">
     <label for="add_name">نام نمایشی</label>
     <input type="text" name="name" id="add_name" placeholder="مثلاً: فرانسوی" required>
@@ -27,15 +30,11 @@
 <div class="table-wrap">
   <table class="data-table">
     <thead>
-      <tr><th>کد</th><th>نام نمایشی</th><th>ضریب</th><th>عملیات</th></tr>
+      <tr><th>نام نمایشی</th><th>ضریب</th><th>عملیات</th></tr>
     </thead>
     <tbody>
       {% for lang in languages %}
       <tr>
-        <td class="mono">
-          <input type="text" name="code" value="{{ lang.code }}" form="edit-lang-{{ lang.id }}"
-                 style="margin:0; padding:6px 8px;" required>
-        </td>
         <td>
           <input type="text" name="name" value="{{ lang.name }}" form="edit-lang-{{ lang.id }}"
                  style="margin:0; padding:6px 8px;" required>
@@ -56,14 +55,12 @@
   </table>
 </div>
 
-{# فرم‌های واقعی هر ردیف اینجا، خارج از جدول تعریف می‌شوند و فقط با
-   attribute «form» در سلول‌های بالا به آن‌ها وصل شده‌اند — چون
-   <form> از نظر HTML مجاز نیست مستقیماً داخل <tr>/<td> قرار بگیرد. #}
+
 {% for lang in languages %}
-  <form id="edit-lang-{{ lang.id }}" method="post" action="{% url 'admin_language_edit' lang.id %}" style="display:none;">
+  <form id="edit-lang-{{ lang.id }}" method="post" action="{% url 'language-edit-admin' lang.id %}" style="display:none;">
     {% csrf_token %}
   </form>
-  <form id="delete-lang-{{ lang.id }}" method="post" action="{% url 'admin_language_delete' lang.id %}"
+  <form id="delete-lang-{{ lang.id }}" method="get" action="{% url 'language-delete-admin' lang.id %}"
         style="display:none;"
         onsubmit="return confirm('زبان «{{ lang.name }}» حذف شود؟');">
     {% csrf_token %}

@@ -4,32 +4,41 @@
 {% block nav_orders %}active{% endblock %}
 
 {% block content %}
-<a href="{% url 'admin_orders' %}" class="btn btn-ghost" style="margin-bottom:20px;">‹ بازگشت به لیست سفارش‌ها</a>
+<a href="{% url 'order-list-admin' %}" class="btn btn-ghost" style="margin-bottom:20px;">‹ بازگشت به لیست سفارش‌ها</a>
+
+{% if error %}
+
+  <div class="alert alert-error">{{ error }}</div>
+
+
+{% endif %}
 
 <div class="detail-card">
   <div class="stamp
-    {% if order.status == 'pending_payment' %}stamp-pending
-    {% elif order.status == 'in_progress' %}stamp-progress
-    {% elif order.status == 'ready' %}stamp-ready
-    {% else %}stamp-done{% endif %}"
-    style="position:static; transform:rotate(-8deg); display:inline-flex; margin-bottom:14px;">
-    {{ order.status_label }}
+      {% if order.order_status == 'PENDING' %}stamp-pending
+      {% elif order.order_status == 'PROGRESS' %}stamp-progress
+      {% elif order.order_status == 'READY' %}stamp-ready
+      {% else %}stamp-done{% endif %}">
+      {% if order.order_status == 'DELIVERED' %}تحویل شده
+      {% elif order.order_status == 'PROGRESS' %}درحال انجام
+      {% elif order.order_status == 'READY' %}آماده تحویل
+      {% else %}درانتظار تایید{% endif %}
   </div>
 
-  <div class="page-title" style="font-size:20px;">سفارش #{{ order.id }} — {{ order.type_label }}</div>
+  <div class="page-title" style="font-size:20px;">سفارش #{{ order.id }} — {{ order.get_order_type_display }}</div>
   <div class="page-sub" style="margin-bottom:0;">مشتری: {{ order.user.username }}</div>
 
   <div class="detail-grid">
-    <div class="detail-field"><div class="k">تعداد صفحات</div><div class="v">{{ order.pages }}</div></div>
-    <div class="detail-field"><div class="k">زبان</div><div class="v">{{ order.language_label }}</div></div>
-    <div class="detail-field"><div class="k">نوع متن</div><div class="v">{{ order.format_label }}</div></div>
-    <div class="detail-field"><div class="k">زمان تخمینی</div><div class="v">{{ order.days }} روز کاری</div></div>
+    <div class="detail-field"><div class="k">تعداد صفحات</div><div class="v">{{ order.page_count }}</div></div>
+    <div class="detail-field"><div class="k">زبان</div><div class="v">{{ order.language }}</div></div>
+    <div class="detail-field"><div class="k">نوع متن</div><div class="v">{{ order.input_format }}</div></div>
+    <div class="detail-field"><div class="k">زمان تخمینی</div><div class="v">{{ order.estimated_days }} روز کاری</div></div>
   </div>
 
   <div class="pay-box">
-    <div class="row"><span>هزینه کل سفارش</span><span class="mono">{{ order.price_display }}</span></div>
-    <div class="row"><span>پرداخت‌شده</span><span class="mono">{{ order.paid_display }}</span></div>
-    <div class="row total"><span>باقی‌مانده</span><span class="mono">{{ order.remaining_display }}</span></div>
+    <div class="row"><span>هزینه کل سفارش</span><span class="mono">{{ order.estimated_price }} تومان</span></div>
+    <div class="row"><span>پرداخت‌شده</span><span class="mono">{{ order.paid_amount }} تومان</span></div>
+    <div class="row total"><span>باقی‌مانده</span><span class="mono">{{ order.remain_amount }} تومان</span></div>
   </div>
 
   <!-- فایل ضمیمه‌ی مشتری (اصل متن) -->
@@ -37,8 +46,8 @@
     <div class="detail-field">
       <div class="k">فایل ارسالی مشتری</div>
       <div class="v">
-        {% if order.attachment %}
-          <a href="{{ order.attachment.url }}" class="file-link" target="_blank" rel="noopener">دانلود / مشاهده فایل مشتری</a>
+        {% if input_file %}
+          <a href="{{ input_file.file.url }}" class="file-link" target="_blank" rel="noopener">دانلود / مشاهده فایل مشتری</a>
         {% else %}
           <span class="no-file">فایلی ارسال نشده</span>
         {% endif %}
@@ -49,31 +58,32 @@
   <!-- آپلود فایل نهایی توسط مغازه -->
   <div style="margin-top:22px; padding-top:18px; border-top:1px dashed var(--border);">
     <label for="id_final_file">آپلود فایل نهایی (تایپ‌شده / ترجمه‌شده)</label>
-    <form method="post" action="{% url 'admin_order_upload_final' order.id %}" enctype="multipart/form-data" style="display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap;">
+    <form method="post" action="{% url 'order-file-upload-admin' order.id %}" enctype="multipart/form-data" style="display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap;">
       {% csrf_token %}
       <input type="file" name="final_file" id="id_final_file"
              accept=".pdf,.doc,.docx" style="max-width:280px;" required>
       <button type="submit" class="btn btn-primary">آپلود و تغییر وضعیت به «آماده تحویل»</button>
     </form>
-    {% if order.final_file %}
+    {% if output_file %}
       <div class="confirm-note" style="margin-top:8px;">
-        فایل فعلی: <a href="{{ order.final_file.url }}" class="file-link" target="_blank" rel="noopener">مشاهده فایل نهایی آپلودشده</a>
+        فایل فعلی: <a href="{{ output_file.file.url }}" class="file-link" target="_blank" rel="noopener">مشاهده فایل نهایی آپلودشده</a>
       </div>
     {% endif %}
   </div>
 
-  <!-- تغییر وضعیت دستی (بدون آپلود) -->
-  {% if order.status == 'in_progress' or order.status == 'ready' %}
-  <div style="margin-top:18px;">
-    <form method="post" action="{% url 'admin_order_set_status' order.id %}" style="display:flex; gap:10px; align-items:center;">
-      {% csrf_token %}
-      <select name="status" style="margin:0; max-width:220px;">
-        <option value="in_progress" {% if order.status == 'in_progress' %}selected{% endif %}>در حال انجام</option>
-        <option value="ready" {% if order.status == 'ready' %}selected{% endif %}>آماده تحویل</option>
-      </select>
-      <button type="submit" class="btn btn-ghost btn-sm">اعمال تغییر وضعیت</button>
-    </form>
-  </div>
-  {% endif %}
+<!--  &lt;!&ndash; تغییر وضعیت دستی (بدون آپلود) &ndash;&gt;-->
+<!--  {% if order.status == 'in_progress' or order.status == 'ready' %}-->
+<!--  <div style="margin-top:18px;">-->
+<!--  <div style="margin-top:18px;">-->
+<!--    <form method="post" action="{% url 'admin_order_set_status' order.id %}" style="display:flex; gap:10px; align-items:center;">-->
+<!--      {% csrf_token %}-->
+<!--      <select name="status" style="margin:0; max-width:220px;">-->
+<!--        <option value="in_progress"> {% if order.order_status == 'PROGRESS'%} در حال انجام{% endif %}</option>-->
+<!--        <option value="ready">{% if order.order_status == 'READY'%}آماده تحویل{% endif %}</option>-->
+<!--      </select>-->
+<!--      <button type="submit" class="btn btn-ghost btn-sm">اعمال تغییر وضعیت</button>-->
+<!--    </form>-->
+<!--  </div>-->
+<!--  {% endif %}-->
 </div>
 {% endblock %}

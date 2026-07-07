@@ -12,6 +12,9 @@ class LoginView(View):
     template_name = 'auth/login.html'
 
     def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('profile')
+
         return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):
@@ -31,6 +34,9 @@ class RegisterView(View):
     template_name = 'auth/register.html'
 
     def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('profile')
+
         return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):

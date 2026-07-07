@@ -1,5 +1,4 @@
 {% load static %}
-<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -14,15 +13,15 @@
       <div class="brand">پنل مدیریت</div>
       <div class="brand-sub">SHOP ADMIN</div>
     </div>
-    <a href="{% url 'admin_orders' %}" class="nav-item {% block nav_orders %}{% endblock %}">سفارش‌ها</a>
-    <a href="{% url 'admin_payments' %}" class="nav-item {% block nav_payments %}{% endblock %}">پرداخت‌ها</a>
-    <a href="{% url 'admin_languages' %}" class="nav-item {% block nav_languages %}{% endblock %}">زبان‌ها</a>
-    <a href="{% url 'admin_formats' %}" class="nav-item {% block nav_formats %}{% endblock %}">نوع فرمت‌ها</a>
-    <a href="{% url 'admin_users' %}" class="nav-item {% block nav_users %}{% endblock %}">کاربران</a>
+    <a href="{% url 'order-list-admin' %}" class="nav-item {% block nav_orders %}{% endblock %}">سفارش‌ها</a>
+    <a href="{% url 'payment-list-admin' %}" class="nav-item {% block nav_payments %}{% endblock %}">پرداخت‌ها</a>
+    <a href="{% url 'language-list-admin' %}" class="nav-item {% block nav_languages %}{% endblock %}">زبان‌ها</a>
+    <a href="{% url 'format-list-admin' %}" class="nav-item {% block nav_formats %}{% endblock %}">نوع فرمت‌ها</a>
+    <a href="{% url 'user-list-admin' %}" class="nav-item {% block nav_users %}{% endblock %}">کاربران</a>
     <div class="sidebar-foot">
-      <div class="user-chip">مدیر: {{ request.user.username }}</div>
-      <a href="{% url 'profile' %}" class="logout-btn" style="display:block; text-align:center; text-decoration:none; margin-bottom:8px;">بازگشت به سایت</a>
-      <form method="post" action="{% url 'logout' %}">
+      <div class="user-chip">مدیر: {{ request.user.first_name }} {{ request.user.last_name }}</div>
+      <a href="{% url 'profile' %}" class="logout-btn" style="display:block; text-align:center; text-decoration:none; margin-bottom: 10px;">بازگشت به سایت</a>
+      <form method="get" action="{% url 'logout' %}">
         {% csrf_token %}
         <button type="submit" class="logout-btn">خروج از حساب</button>
       </form>

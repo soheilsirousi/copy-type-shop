@@ -26,6 +26,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('user/', include('user.urls')),
     path('order/', include('order.urls')),
+    path('admin-panel/', include('adminpanel.urls')),
     path('', IndexView.as_view(), name='index'),
 ]
 
