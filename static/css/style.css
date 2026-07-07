@@ -266,3 +266,51 @@ input:focus, select:focus{ outline:2px solid var(--navy); outline-offset:1px; }
   .main{ padding:24px 18px; }
   .detail-grid{ grid-template-columns:1fr; }
 }
+
+/* ================= Admin panel additions ================= */
+
+/* small heading row with an action button on the same line */
+.section-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:12px; }
+
+/* status badge — same colors as the big ticket stamp, but compact for table rows */
+.badge{
+  display:inline-block; padding:3px 11px; border-radius:999px;
+  font-size:11.5px; font-weight:700; border:1.5px solid; white-space:nowrap;
+}
+.badge-pending{ color:var(--ink-soft); border-color:var(--ink-soft); background:rgba(107,98,85,.06); }
+.badge-progress{ color:var(--navy); border-color:var(--navy); background:rgba(38,58,78,.06); }
+.badge-ready{ color:var(--stamp-green); border-color:var(--stamp-green); background:rgba(63,107,82,.06); }
+.badge-done{ color:var(--stamp-red); border-color:var(--stamp-red); background:rgba(168,58,50,.06); }
+
+/* ledger-style data table */
+.table-wrap{ background:var(--card-bg); border:1.5px solid var(--border); overflow-x:auto; margin-bottom:24px; }
+.data-table{ width:100%; border-collapse:collapse; min-width:560px; }
+.data-table th, .data-table td{
+  padding:11px 16px; text-align:right; font-size:13.5px; border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+.data-table thead th{
+  background:var(--navy); color:#F3EEDD; font-weight:700; font-size:12.5px;
+  position:sticky; top:0;
+}
+.data-table tbody tr:hover td{ background:rgba(38,58,78,.03); }
+.data-table tbody tr:last-child td{ border-bottom:none; }
+.data-table td.actions{ display:flex; gap:8px; }
+.data-table .mono{ font-family:'JetBrains Mono',monospace; }
+
+/* small inline action buttons inside table rows */
+.btn-sm{ padding:6px 13px; font-size:12.5px; }
+.btn-danger{ background:#fff; color:var(--stamp-red); border:1.5px solid var(--stamp-red); }
+.btn-danger:hover{ background:rgba(168,58,50,.06); }
+
+/* compact inline form used for adding a new language/format row */
+.inline-form{ display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; margin-bottom:22px; padding:16px; background:var(--card-bg); border:1.5px dashed var(--border); }
+.inline-form .field{ display:flex; flex-direction:column; gap:4px; }
+.inline-form label{ margin:0; font-size:12px; }
+.inline-form input{ margin:0; width:auto; min-width:120px; }
+
+/* confirm-delete popover-ish inline text */
+.confirm-note{ font-size:12px; color:var(--ink-soft); }
+
+.file-link{ color:var(--navy); font-weight:600; text-decoration:underline; }
+.no-file{ color:var(--ink-soft); font-size:12.5px; }

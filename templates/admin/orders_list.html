@@ -1,0 +1,47 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}سفارش‌ها{% endblock %}
+{% block nav_orders %}active{% endblock %}
+
+{% block content %}
+<div class="page-title">سفارش‌ها</div>
+<div class="page-sub">همه‌ی سفارش‌های ثبت‌شده در سامانه — برای مشاهده‌ی جزئیات و آپلود فایل، روی هر سفارش بزنید.</div>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th><th>مشتری</th><th>نوع</th><th>صفحات</th><th>زبان</th>
+        <th>هزینه</th><th>وضعیت</th><th>تاریخ ثبت</th><th>عملیات</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td class="mono">#{{ order.id }}</td>
+        <td>{{ order.user.username }}</td>
+        <td>{{ order.type_label }}</td>
+        <td class="mono">{{ order.pages }}</td>
+        <td>{{ order.language_label }}</td>
+        <td class="mono">{{ order.price_display }}</td>
+        <td>
+          <span class="badge
+            {% if order.status == 'pending_payment' %}badge-pending
+            {% elif order.status == 'in_progress' %}badge-progress
+            {% elif order.status == 'ready' %}badge-ready
+            {% else %}badge-done{% endif %}">
+            {{ order.status_label }}
+          </span>
+        </td>
+        <td class="mono">{{ order.created_at|date:"Y-m-d" }}</td>
+        <td class="actions">
+          <a href="{% url 'admin_order_detail' order.id %}" class="btn btn-ghost btn-sm">مشاهده</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="9" style="text-align:center; color:var(--ink-soft);">هیچ سفارشی ثبت نشده است.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

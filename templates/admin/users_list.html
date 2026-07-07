@@ -1,0 +1,57 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}کاربران{% endblock %}
+{% block nav_users %}active{% endblock %}
+
+{% block content %}
+<div class="section-head">
+  <div>
+    <div class="page-title" style="margin-bottom:2px;">کاربران</div>
+    <div class="page-sub" style="margin-bottom:0;">لیست کاربران ثبت‌نام‌شده در سامانه.</div>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>شناسه</th>
+        <th>نام کاربری</th>
+        <th>ایمیل</th>
+        <th>تعداد سفارش</th>
+        <th>وضعیت</th>
+        <th>عضویت از</th>
+        <th>عملیات</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td class="mono">{{ u.id }}</td>
+        <td>{{ u.username }}</td>
+        <td>{{ u.email|default:"—" }}</td>
+        <td class="mono">{{ u.order_count }}</td>
+        <td>
+          {% if u.is_active %}
+            <span class="badge badge-ready">فعال</span>
+          {% else %}
+            <span class="badge badge-done">غیرفعال</span>
+          {% endif %}
+        </td>
+        <td class="mono">{{ u.date_joined|date:"Y-m-d" }}</td>
+        <td class="actions">
+          <a href="{% url 'admin_user_edit' u.id %}" class="btn btn-ghost btn-sm">ویرایش</a>
+          <form method="post" action="{% url 'admin_user_delete' u.id %}"
+                onsubmit="return confirm('کاربر «{{ u.username }}» حذف شود؟ این کار قابل بازگشت نیست.');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" style="text-align:center; color:var(--ink-soft);">هیچ کاربری ثبت نشده است.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

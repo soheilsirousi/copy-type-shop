@@ -1,0 +1,69 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}نوع فرمت‌ها{% endblock %}
+{% block nav_formats %}active{% endblock %}
+
+{% block content %}
+<div class="page-title">نوع فرمت‌های ورودی</div>
+<div class="page-sub">فرمت متن مشتری (دست‌نویس، PDF و غیره) که در محاسبه‌ی قیمت اثر می‌گذارد.</div>
+
+<form method="post" action="{% url 'admin_format_add' %}" class="inline-form">
+  {% csrf_token %}
+  <div class="field">
+    <label for="add_code">کد</label>
+    <input type="text" name="code" id="add_code" placeholder="مثلاً: scanned" required>
+  </div>
+  <div class="field">
+    <label for="add_name">نام نمایشی</label>
+    <input type="text" name="name" id="add_name" placeholder="مثلاً: اسکن‌شده" required>
+  </div>
+  <div class="field">
+    <label for="add_factor">ضریب</label>
+    <input type="number" step="0.01" min="0" name="factor" id="add_factor" placeholder="مثلاً: 1.15" required>
+  </div>
+  <button type="submit" class="btn btn-gold">افزودن فرمت جدید</button>
+</form>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr><th>کد</th><th>نام نمایشی</th><th>ضریب</th><th>عملیات</th></tr>
+    </thead>
+    <tbody>
+      {% for fmt in formats %}
+      <tr>
+        <td class="mono">
+          <input type="text" name="code" value="{{ fmt.code }}" form="edit-fmt-{{ fmt.id }}"
+                 style="margin:0; padding:6px 8px;" required>
+        </td>
+        <td>
+          <input type="text" name="name" value="{{ fmt.name }}" form="edit-fmt-{{ fmt.id }}"
+                 style="margin:0; padding:6px 8px;" required>
+        </td>
+        <td>
+          <input type="number" step="0.01" min="0" name="factor" value="{{ fmt.factor }}" form="edit-fmt-{{ fmt.id }}"
+                 class="mono" style="margin:0; padding:6px 8px; width:100px;" required>
+        </td>
+        <td class="actions">
+          <button type="submit" form="edit-fmt-{{ fmt.id }}" class="btn btn-ghost btn-sm">ذخیره</button>
+          <button type="submit" form="delete-fmt-{{ fmt.id }}" class="btn btn-danger btn-sm">حذف</button>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" style="text-align:center; color:var(--ink-soft);">هیچ فرمتی تعریف نشده است.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% for fmt in formats %}
+  <form id="edit-fmt-{{ fmt.id }}" method="post" action="{% url 'admin_format_edit' fmt.id %}" style="display:none;">
+    {% csrf_token %}
+  </form>
+  <form id="delete-fmt-{{ fmt.id }}" method="post" action="{% url 'admin_format_delete' fmt.id %}"
+        style="display:none;"
+        onsubmit="return confirm('فرمت «{{ fmt.name }}» حذف شود؟');">
+    {% csrf_token %}
+  </form>
+{% endfor %}
+{% endblock %}
