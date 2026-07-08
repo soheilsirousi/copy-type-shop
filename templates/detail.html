@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}ویرایش کاربر{% endblock %}
+{% block nav_detail %}active{% endblock %}
+
+{% block content %}
+
+<div class="page-title">ویرایش پروفایل</div>
+<div class="page-sub">تغییر اطلاعات حساب کاربری</div>
+
+{% if error %}
+
+  <div class="alert alert-error">{{ error }}</div>
+
+
+{% endif %}
+
+<form method="post" class="form-card" style="max-width:460px;">
+  {% csrf_token %}
+
+  <label for="id_username">نام کاربری</label>
+  <input type="text" name="username" id="id_username" value="{{ user.username }}" readonly>
+
+  <label for="id_email">ایمیل</label>
+  <input type="email" name="email" id="id_email" value="{{ user.email }}">
+
+    <label for="id_fname">نام</label>
+  <input type="text" name="fname" id="id_fname" value="{{ user.first_name }}">
+
+    <label for="id_lname">نام خانوادگی</label>
+  <input type="text" name="lname" id="id_lname" value="{{ user.last_name }}">
+
+  <label for="id_new_password">رمز عبور جدید (اختیاری)</label>
+  <input type="password" name="new_password" id="id_new_password" placeholder="خالی بگذارید تا تغییر نکند">
+
+
+  <div style="display:flex; gap:10px;">
+    <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+  </div>
+</form>
+{% endblock %}
