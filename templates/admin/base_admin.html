@@ -13,6 +13,7 @@
       <div class="brand">پنل مدیریت</div>
       <div class="brand-sub">SHOP ADMIN</div>
     </div>
+      <a href="{% url 'dashboard-admin' %}" class="nav-item {% block nav_dashboard %}{% endblock %}">داشبورد</a>
     <a href="{% url 'order-list-admin' %}" class="nav-item {% block nav_orders %}{% endblock %}">سفارش‌ها</a>
     <a href="{% url 'payment-list-admin' %}" class="nav-item {% block nav_payments %}{% endblock %}">پرداخت‌ها</a>
     <a href="{% url 'language-list-admin' %}" class="nav-item {% block nav_languages %}{% endblock %}">زبان‌ها</a>

@@ -4,9 +4,12 @@ from adminpanel.views import (OrderListAdminView,PaymentListAdminView,
                               LanguageListAdminView, FormatListAdminView, UserListAdminView,
                               OrderDetailAdminView, OrderUploadFileAdmin, LanguageAddAdminView,
                               LanguageEditAdminView, LanguageDeleteAdminView, FormatAddAdminView,
-                              FormatEditAdminView, FormatDeleteAdminView, UserEditAdminView, UserDeleteAdminView)
+                              FormatEditAdminView, FormatDeleteAdminView, UserEditAdminView, UserDeleteAdminView,
+                              DashboardAdminView)
 
 urlpatterns = [
+    path('dashboard/', DashboardAdminView.as_view(), name='dashboard-admin'),
+
     path('order/list/', OrderListAdminView.as_view(), name='order-list-admin'),
     path('order/<int:pk>/', OrderDetailAdminView.as_view(), name='order-detail-admin'),
     path('order/<int:pk>/file-upload/', OrderUploadFileAdmin.as_view(), name='order-file-upload-admin'),

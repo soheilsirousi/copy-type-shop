@@ -1,7 +1,9 @@
+import datetime
 import re
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.db.models import Sum, Count
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
@@ -299,3 +301,51 @@ class UserDeleteAdminView(StaffRequiredMixin, View):
         return render(request, self.template_name, context={"users": users})
 
 
+class DashboardAdminView(StaffRequiredMixin, View):
+    template_name = 'admin/dashboard.html'
+
+    def get(self, request, *args, **kwargs):
+        today = datetime.date.today()
+
+        orders_today = Order.objects.filter(created_at__date=today).count()
+        revenue_today = Payment.objects.filter(created_at__date=today).aggregate(total=Sum('amount'))['total'] or 0
+        new_users_today = User.objects.filter(date_joined__date=today).count()
+
+        total_orders = Order.objects.count()
+        total_revenue = Payment.objects.aggregate(total=Sum('amount'))['total'] or 0
+        total_order_value = Order.objects.aggregate(total=Sum('estimated_price'))['total'] or 0
+        total_users = User.objects.count()
+
+
+        status_counts = {code: 0 for code, _ in Order.status}
+        for row in Order.objects.values('order_status').annotate(count=Count('id')):
+            status_counts[row['order_status']] = row['count']
+
+        PERSIAN_WEEKDAYS = ['دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه', 'یکشنبه']
+        daily_counts = []
+        for i in range(6, -1, -1):
+            day = today - datetime.timedelta(days=i)
+            count = Order.objects.filter(created_at__date=day).count()
+            daily_counts.append({'date': day, 'count': count})
+
+        max_count = max((d['count'] for d in daily_counts), default=0) or 1
+        daily_chart = [
+            {
+                'label': PERSIAN_WEEKDAYS[d['date'].weekday()],
+                'count': d['count'],
+                'height_percent': max(6, round(d['count'] / max_count * 100)),
+            }
+            for d in daily_counts
+        ]
+
+        return render(request, self.template_name, context={
+        'orders_today': orders_today,
+        'revenue_today_display': Order.toman(revenue_today),
+        'new_users_today': new_users_today,
+        'total_orders': total_orders,
+        'total_revenue_display': Order.toman(total_revenue),
+        'total_order_value_display': Order.toman(total_order_value),
+        'total_users': total_users,
+        'status_counts': status_counts,
+        'daily_chart': daily_chart,
+    })

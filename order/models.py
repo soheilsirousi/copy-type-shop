@@ -94,3 +94,7 @@ class Order(models.Model):
             'days': int(days),
             'half_payment': int(round(price / 2 / 100) * 100),
         }
+
+    @classmethod
+    def toman(cls, amount):
+        return f'{int(amount or 0):,} تومان'

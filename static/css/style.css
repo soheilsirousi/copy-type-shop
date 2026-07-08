@@ -314,3 +314,44 @@ input:focus, select:focus{ outline:2px solid var(--navy); outline-offset:1px; }
 
 .file-link{ color:var(--navy); font-weight:600; text-decoration:underline; }
 .no-file{ color:var(--ink-soft); font-size:12.5px; }
+
+/* ---------- Dashboard stat cards ---------- */
+.stat-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:16px; margin-bottom:30px; }
+.stat-card{
+  background:var(--card-bg); border:1.5px solid var(--border);
+  padding:18px 20px; position:relative; overflow:hidden;
+}
+.stat-card::before{
+  content:""; position:absolute; top:0; right:0; width:5px; height:100%; background:var(--gold);
+}
+.stat-card.accent-navy::before{ background:var(--navy); }
+.stat-card.accent-green::before{ background:var(--stamp-green); }
+.stat-card .stat-label{ font-size:12.5px; color:var(--ink-soft); margin-bottom:8px; }
+.stat-card .stat-value{ font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700; color:var(--navy); }
+.stat-card .stat-sub{ font-size:11.5px; color:var(--ink-soft); margin-top:4px; }
+
+.stat-section-title{ font-size:14px; font-weight:700; color:var(--ink-soft); margin:6px 0 14px; }
+
+/* ---------- Simple server-rendered bar chart (no JS) ---------- */
+.bar-chart{
+  display:flex; align-items:flex-end; gap:10px;
+  height:160px; padding:16px 18px 8px;
+  background:var(--card-bg); border:1.5px solid var(--border); margin-bottom:30px;
+}
+.bar-chart-col{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:6px; }
+.bar-chart-bar{
+  width:100%; max-width:34px; background:var(--navy); border-radius:2px 2px 0 0;
+  min-height:3px; transition:opacity .15s;
+}
+.bar-chart-col:hover .bar-chart-bar{ opacity:.8; }
+.bar-chart-count{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-soft); }
+.bar-chart-label{ font-size:11px; color:var(--ink-soft); }
+
+/* ---------- Status breakdown row ---------- */
+.status-breakdown{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:30px; }
+.status-chip{
+  display:flex; align-items:center; gap:9px;
+  background:var(--card-bg); border:1.5px solid var(--border);
+  padding:10px 16px; font-size:13px;
+}
+.status-chip .status-chip-count{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:15px; }

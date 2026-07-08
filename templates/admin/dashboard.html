@@ -1,0 +1,69 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}داشبورد{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+<div class="page-title">داشبورد</div>
+<div class="page-sub">نمای کلی وضعیت مغازه — آمار امروز و آمار کل.</div>
+
+<div class="stat-section-title">امروز</div>
+<div class="stat-grid">
+  <div class="stat-card accent-navy">
+    <div class="stat-label">سفارش‌های ثبت‌شده امروز</div>
+    <div class="stat-value">{{ orders_today }}</div>
+  </div>
+  <div class="stat-card accent-green">
+    <div class="stat-label">مبلغ دریافتی امروز</div>
+    <div class="stat-value">{{ revenue_today_display }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">کاربران جدید امروز</div>
+    <div class="stat-value">{{ new_users_today }}</div>
+  </div>
+</div>
+
+<div class="stat-section-title">آمار کلی</div>
+<div class="stat-grid">
+  <div class="stat-card accent-navy">
+    <div class="stat-label">کل سفارش‌ها</div>
+    <div class="stat-value">{{ total_orders }}</div>
+  </div>
+  <div class="stat-card accent-green">
+    <div class="stat-label">کل مبلغ دریافتی</div>
+    <div class="stat-value">{{ total_revenue_display }}</div>
+    <div class="stat-sub">از {{ total_order_value_display }} کل ارزش سفارش‌ها</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">کل کاربران</div>
+    <div class="stat-value">{{ total_users }}</div>
+  </div>
+</div>
+
+<div class="stat-section-title">وضعیت سفارش‌ها</div>
+<div class="status-breakdown">
+  <div class="status-chip">
+    <span class="badge badge-progress">در حال انجام</span>
+    <span class="status-chip-count">{{ status_counts.PROGRESS }}</span>
+  </div>
+  <div class="status-chip">
+    <span class="badge badge-ready">آماده تحویل</span>
+    <span class="status-chip-count">{{ status_counts.READY }}</span>
+  </div>
+  <div class="status-chip">
+    <span class="badge badge-done">تحویل‌شده</span>
+    <span class="status-chip-count">{{ status_counts.DELIVERED }}</span>
+  </div>
+</div>
+
+<div class="stat-section-title">تعداد سفارش‌ها در ۷ روز اخیر</div>
+<div class="bar-chart">
+  {% for day in daily_chart %}
+  <div class="bar-chart-col">
+    <span class="bar-chart-count">{{ day.count }}</span>
+    <div class="bar-chart-bar" style="height:{{ day.height_percent }}%;"></div>
+    <span class="bar-chart-label">{{ day.label }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

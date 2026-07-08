@@ -20,7 +20,7 @@
     <div class="sidebar-foot">
       <div class="user-chip">کاربر: {{ request.user.first_name }} {{ request.user.last_name }}</div>
         {% if request.user.is_staff %}
-      <form method="get" action="{% url 'order-list-admin' %}">
+      <form method="get" action="{% url 'dashboard-admin' %}">
         <button type="submit" class="logout-btn" style="margin-bottom: 10px">پنل ادمین</button>
       </form>
         {% endif %}

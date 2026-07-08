@@ -25,10 +25,6 @@ class NewOrderView(LoginRequiredMixin, View):
         return render(request, template_name=self.template_name, context=data)
 
     def post(self, request, *args, **kwargs):
-
-        print('POST keys:', list(request.POST.keys()))
-        print('FILES keys:', list(request.FILES.keys()))
-        print('Content-Type:', request.content_type)
         order_type_code = request.POST.get('order_type', None)
         pages = request.POST.get('pages', None)
         language_code = request.POST.get('language', None)
