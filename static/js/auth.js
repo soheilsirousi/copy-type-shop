@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loginForm.addEventListener('submit', function (event) {
       const password = document.getElementById('id_password');
 
-      if (password.value.length < 4) {
+      if (password.value.length < 1) {
         event.preventDefault();
         showAlert('رمز عبور باید حداقل ۴ کاراکتر باشد.', 'error');
       } else {

@@ -11,6 +11,13 @@
   </div>
 </div>
 
+{% if error %}
+
+  <div class="alert alert-error">{{ error }}</div>
+
+
+{% endif %}
+
 <div class="table-wrap">
   <table class="data-table">
     <thead>
@@ -30,7 +37,7 @@
         <td class="mono">{{ u.id }}</td>
         <td>{{ u.username }}</td>
         <td>{{ u.email|default:"—" }}</td>
-        <td class="mono">{{ u.order_count }}</td>
+        <td class="mono">{{ u.orders.count }}</td>
         <td>
           {% if u.is_active %}
             <span class="badge badge-ready">فعال</span>
@@ -40,8 +47,8 @@
         </td>
         <td class="mono">{{ u.date_joined|date:"Y-m-d" }}</td>
         <td class="actions">
-          <a href="{% url 'admin_user_edit' u.id %}" class="btn btn-ghost btn-sm">ویرایش</a>
-          <form method="post" action="{% url 'admin_user_delete' u.id %}"
+          <a href="{% url 'user-edit-admin' u.id %}" class="btn btn-ghost btn-sm">ویرایش</a>
+          <form method="post" action="{% url 'user-delete-admin' u.id %}"
                 onsubmit="return confirm('کاربر «{{ u.username }}» حذف شود؟ این کار قابل بازگشت نیست.');">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger btn-sm">حذف</button>

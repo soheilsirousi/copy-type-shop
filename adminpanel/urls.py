@@ -4,7 +4,7 @@ from adminpanel.views import (OrderListAdminView,PaymentListAdminView,
                               LanguageListAdminView, FormatListAdminView, UserListAdminView,
                               OrderDetailAdminView, OrderUploadFileAdmin, LanguageAddAdminView,
                               LanguageEditAdminView, LanguageDeleteAdminView, FormatAddAdminView,
-                              FormatEditAdminView, FormatDeleteAdminView)
+                              FormatEditAdminView, FormatDeleteAdminView, UserEditAdminView, UserDeleteAdminView)
 
 urlpatterns = [
     path('order/list/', OrderListAdminView.as_view(), name='order-list-admin'),
@@ -24,4 +24,6 @@ urlpatterns = [
     path('format/<int:pk>/delete/', FormatDeleteAdminView.as_view(), name='format-delete-admin'),
 
     path('user/list/', UserListAdminView.as_view(), name='user-list-admin'),
+    path('user/<int:pk>/edit/', UserEditAdminView.as_view(), name='user-edit-admin'),
+    path('user/<int:pk>/delete/', UserDeleteAdminView.as_view(), name='user-delete-admin'),
 ]

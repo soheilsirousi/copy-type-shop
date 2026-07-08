@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
@@ -219,4 +221,81 @@ class UserListAdminView(StaffRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         users = User.objects.all()
         return render(request, self.template_name, context={"users": users})
+
+
+class UserEditAdminView(StaffRequiredMixin, View):
+    template_name = 'admin/user_form.html'
+
+    def get(self, request, pk, *args, **kwargs):
+        user = User.objects.filter(pk=pk)
+        if not user.exists():
+            response = {"error": "کاربر یافت نشد."}
+            return render(request, 'admin/users_list.html', context=response)
+
+        user = user.first()
+
+        return render(request, self.template_name, context={"user": user})
+
+    def post(self, request, pk, *args, **kwargs):
+        email = request.POST.get('email')
+        fname = request.POST.get('fname')
+        lname = request.POST.get('lname')
+        new_password = request.POST.get('new_password')
+        is_active = request.POST.get('is_active')
+
+        user = User.objects.filter(pk=pk)
+        if not user.exists():
+            response = {"error": "کاربر یافت نشد."}
+            return render(request, self.template_name, context=response)
+
+        user = user.first()
+
+        if email is None or fname is None or lname is None:
+            response = {"error": "ایمیل، نام و نام خانوادگی الزامی می‌باشد.", "user": user}
+            return render(request, self.template_name, context=response)
+
+        if new_password is not None and new_password != '':
+            user.set_password(new_password)
+
+        if is_active == 'on':
+            user.is_active = True
+        else:
+            user.is_active = False
+
+
+        pattern = r'^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$'
+        check = re.search(pattern, email)
+        if not check:
+            response = {"error": "ایمیل وارد شده معتبر نیست.", "user": user}
+            return render(request, self.template_name, context=response)
+
+        find_user = User.objects.filter(email=email)
+
+        if find_user.exists() and user != find_user[0]:
+            response = {"error": "این ایمیل قبلا ثبت شده است.", "user": user}
+            return render(request, self.template_name, context=response)
+
+        user.email = email
+        user.first_name = fname
+        user.last_name = lname
+        user.save()
+
+        return render(request, self.template_name, context={"user": user})
+
+
+class UserDeleteAdminView(StaffRequiredMixin, View):
+    template_name = 'admin/users_list.html'
+
+    def post(self, request, pk, *args, **kwargs):
+        user = User.objects.filter(pk=pk)
+        if not user.exists():
+            response = {"error": "کاربر یافت نشد."}
+            return render(request, self.template_name, context=response)
+
+        user = user.first()
+
+        user.delete()
+        users = User.objects.all()
+        return render(request, self.template_name, context={"users": users})
+
 
